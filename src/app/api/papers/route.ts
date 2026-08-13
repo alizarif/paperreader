@@ -1,43 +1,31 @@
 import { NextResponse } from "next/server";
-import { getAllPapers } from "@/data/papers";
+import { createPaper, listPapers } from "@/lib/db";
+import { normalizeBrief } from "@/lib/brief";
 
-export function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const query = searchParams.get("q")?.trim().toLowerCase();
-  const category = searchParams.get("category");
+export const runtime = "nodejs";
 
-  let results = getAllPapers();
+export function GET() {
+  const papers = listPapers();
+  return NextResponse.json({ count: papers.length, papers });
+}
 
-  if (category && category !== "All") {
-    results = results.filter((paper) => paper.category === category);
+export async function POST(request: Request) {
+  let body: { brief?: unknown; model?: string; sourceText?: string };
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
   }
 
-  if (query) {
-    results = results.filter((paper) => {
-      const haystack = [
-        paper.title,
-        paper.abstract,
-        paper.venue,
-        paper.authors.join(" "),
-        paper.tags.join(" "),
-      ]
-        .join(" ")
-        .toLowerCase();
-      return haystack.includes(query);
-    });
+  if (!body.brief || typeof body.brief !== "object") {
+    return NextResponse.json({ error: "Missing brief." }, { status: 400 });
   }
 
-  return NextResponse.json({
-    count: results.length,
-    papers: results.map((paper) => ({
-      id: paper.id,
-      title: paper.title,
-      authors: paper.authors,
-      year: paper.year,
-      venue: paper.venue,
-      category: paper.category,
-      tags: paper.tags,
-      readingMinutes: paper.readingMinutes,
-    })),
+  const record = createPaper({
+    brief: normalizeBrief(body.brief),
+    model: (body.model ?? "").trim(),
+    sourceText: (body.sourceText ?? "").trim(),
   });
+
+  return NextResponse.json({ paper: record }, { status: 201 });
 }

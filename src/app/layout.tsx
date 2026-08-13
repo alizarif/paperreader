@@ -15,11 +15,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "PaperReader",
-    template: "%s · PaperReader",
+    default: "PaperBrief",
+    template: "%s · PaperBrief",
   },
   description:
-    "A clean, distraction-free reader for foundational computer science and machine learning papers.",
+    "AI-powered paper triage for researchers: Contribution / Identification / Data / Results / Caveats, saved to a dashboard.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -32,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <SiteHeader />
         <main className="flex-1">{children}</main>
         <footer className="border-t border-neutral-200 py-6 text-center text-sm text-neutral-500 dark:border-neutral-800">
-          PaperReader — read the classics, distraction-free.
+          PaperBrief — triage papers in minutes.
         </footer>
       </body>
     </html>
