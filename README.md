@@ -36,6 +36,23 @@ Alternatively, set a server-side fallback in a git-ignored `.env.local`:
 OPENROUTER_API_KEY=sk-or-v1-…
 ```
 
+## Jupyter notebook version (Python)
+
+Prefer working in a notebook? [`paperbrief.ipynb`](paperbrief.ipynb) is a self-contained,
+pure-Python implementation with the same features: paste/upload → AI brief → SQLite dashboard,
+using `ipywidgets` for the click-through UI.
+
+```bash
+pip install -r requirements-notebook.txt
+export OPENROUTER_API_KEY=sk-or-v1-…   # or you'll be prompted (hidden) in the notebook
+jupyter notebook paperbrief.ipynb      # or open it in Jupyter Lab / VS Code
+```
+
+Then run the setup cells, use the **Interactive app** cell (paste a paper or upload a PDF, pick a
+model, Analyze, Save), and the **Dashboard** cell to browse saved briefs. Data is stored in the same
+`data/paperbrief.db` SQLite file (git-ignored). The API key is read from the environment or a hidden
+prompt — it is never written into the notebook.
+
 ## How it works
 
 | Route              | Purpose                                                  |
