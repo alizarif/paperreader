@@ -1,0 +1,6 @@
+# Dependencies for the Jupyter notebook version (paperbrief.ipynb)
+requests>=2.31
+ipywidgets>=8.1
+pypdf>=4.0
+pandas>=2.0
+notebook>=7.0
